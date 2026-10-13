@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# 数据库与日志 (可选：若想保留默认演示数据可提交，此处忽略临时文件)
+*.log
+*.sqlite3-journal
+
+# 操作系统与IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
