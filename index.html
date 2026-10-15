@@ -9,6 +9,10 @@
 <meta property="og:title" content="复航 RECOVERY ATLAS｜肺癌术后康复指南与风险评估">
 <meta property="og:description" content="从循证指南、复查排期到复发风险量化测算，把复杂的医学问题变成手机上清晰的每一步。">
 <meta property="og:type" content="website">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="复航肺康助手">
+<meta name="format-detection" content="telephone=yes">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314252B'/%3E%3Cpath d='M16 6v10m-3-7c-3 1-5 4-5 8 0 4 3 7 7 7s7-3 7-7c0-4-2-7-5-8' stroke='%23D65A3A' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -792,10 +796,137 @@ ul{margin:0; padding:0; list-style:none}
   .modal-dialog .btn, .modal-dialog .btn-ghost{min-height:46px}
 
   .footer-grid{grid-template-columns:1fr; gap:24px}
-  .back-to-top-btn{right:16px; bottom:20px; width:42px; height:42px}
+  .back-to-top-btn{right:16px; bottom:76px !important; width:42px; height:42px}
+
+  /* 移动端底部悬浮胶囊快捷栏 */
+  .mobile-quick-dock{
+    position:fixed; left:50%; bottom:14px; transform:translateX(-50%) translateY(70px);
+    display:flex; align-items:center; gap:2px; background:rgba(20, 37, 43, 0.94);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border:1px solid rgba(255, 255, 255, 0.22); border-radius:32px;
+    padding:4px 6px; z-index:58; box-shadow:0 8px 24px rgba(0,0,0,0.32);
+    opacity:0; pointer-events:none; transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .25s ease;
+    max-width:calc(100vw - 28px);
+  }
+  .mobile-quick-dock.show{
+    transform:translateX(-50%) translateY(0);
+    opacity:1; pointer-events:auto;
+  }
+  .dock-item{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:5px 9px; text-decoration:none; color:#c2cdd0; font-family:var(--sans);
+    font-size:11px; font-weight:500; border-radius:20px; transition:all .15s ease;
+  }
+  .dock-item:active{
+    color:#fff; background:rgba(255,255,255,0.18); transform:scale(.95);
+  }
+  .dock-icon{ font-size:15px; line-height:1; margin-bottom:2px; }
 }
+
+/* PC端隐藏手机胶囊栏 */
+.mobile-quick-dock{ display:none; }
+
+/* 表单漏选定位与震动红框高亮 */
+.field-error-highlight{
+  border:2px solid var(--verm) !important;
+  background:rgba(214,90,58,.08) !important;
+  border-radius:4px;
+  animation:shakeError .45s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes shakeError{
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* 测算结果心理托底与主动防御卡片 */
+.reassurance-card{
+  margin-top:var(--s3); padding:16px 18px; border-radius:3px;
+  background:#FCFBF8; border:1px solid var(--hair); border-left:4px solid var(--leaf);
+}
+.reassurance-card.high{ border-left-color:var(--verm); background:#FFF8F6; }
+.reassurance-card.med{ border-left-color:#d97706; background:#FFFDF7; }
+.reassurance-title{
+  font-family:var(--serif); font-size:16px; font-weight:600; margin-bottom:6px;
+  display:flex; align-items:center; gap:6px; color:var(--ink);
+}
+.reassurance-text{
+  font-size:13px; line-height:1.75; color:#3a464c;
+}
+
+/* 搜索框清除按钮 */
+.search-input-wrap{ position:relative; width:100%; }
+.search-clear-btn{
+  position:absolute; right:12px; top:50%; transform:translateY(-50%);
+  background:rgba(255,255,255,.15); border:0; color:#c2cdd0; width:24px; height:24px;
+  border-radius:50%; cursor:pointer; display:none; align-items:center; justify-content:center;
+  font-size:14px; font-weight:bold; line-height:1;
+}
+.search-clear-btn:hover{ background:var(--verm); color:#fff; }
+.search-input-wrap.has-text .search-clear-btn{ display:flex; }
+
+/* 备忘长图卡片样式 */
+.share-canvas-container{
+  text-align:center; margin:14px 0; max-height:60vh; overflow-y:auto;
+  border:1px solid var(--hair); background:#FAF8F5; padding:10px; border-radius:4px;
+}
+.share-card-img{
+  max-width:100%; height:auto; box-shadow:0 8px 24px rgba(0,0,0,.15); border-radius:4px;
+}
+.share-tip-box{
+  background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.3);
+  padding:10px 14px; border-radius:4px; font-size:12px; color:#065f46; margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+
+/* 病理报告看懂微指引 */
+.field-hint{
+  font-size:12px; color:#3b565f; background:#f0f7f8; border-left:3px solid #668b68;
+  padding:6px 10px; margin:6px 0 10px; border-radius:2px; line-height:1.55; display:block;
+}
+.path-guide-card{
+  margin-bottom:18px; background:#FAF8F5; border:1px solid #E8E5DE; border-radius:4px;
+  overflow:hidden; font-size:13px;
+}
+.path-guide-summary{
+  cursor:pointer; padding:10px 14px; font-weight:600; color:#14252B; background:#F2EFE9;
+  user-select:none; display:flex; align-items:center; justify-content:space-between;
+}
+.path-guide-summary:hover{ background:#EAE5DC; }
+.path-guide-body{
+  padding:14px; line-height:1.75; color:#2a353a; border-top:1px solid #E8E5DE; font-size:12.5px;
+}
+.path-guide-body strong{ color:var(--verm); }
+
+/* 增强 CT 行前避坑备忘卡 */
+.pre-ct-box{
+  margin-top:28px; padding:22px; background:#FFFDF8; border:1px solid #F5E6B3;
+  border-radius:6px; box-shadow:0 2px 10px rgba(0,0,0,0.02);
+}
+.pre-ct-header{
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+  border-bottom:1px solid #FDE68A; padding-bottom:10px;
+}
+.pre-ct-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin-top:14px;
+}
+.pre-ct-item{
+  background:#FFFFFF; border:1px solid #EFEAE0; padding:14px; border-radius:4px;
+}
+.pre-ct-tag{
+  display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600;
+  color:#B45309; background:#FEF3C7; padding:2px 6px; border-radius:2px; margin-bottom:6px;
+}
+.pre-ct-item h4{
+  font-size:14px; margin:0 0 6px; color:#182126; font-weight:600;
+}
+.pre-ct-item p{
+  font-size:12px; line-height:1.65; color:#667176; margin:0;
+}
+
 @media print{
-  .storage-bar,.site-header,.hero-cta,.form-actions,.closing,.site-footer,.menu-btn,.sched-form,.faq-chips,.result-actions,.submit-to-doc-box,.admin-section,.modal-backdrop,.back-to-top-btn{display:none !important}
+  .storage-bar,.site-header,.hero-cta,.form-actions,.closing,.site-footer,.menu-btn,.sched-form,.faq-chips,.result-actions,.submit-to-doc-box,.admin-section,.modal-backdrop,.back-to-top-btn,.mobile-quick-dock,.pre-ct-box{display:none !important}
   body{background:#fff; font-size:12pt; color:#000}
   .risk,.panel,.sched-section,.doc-note{background:#fff; border-color:#888; box-shadow:none}
   .result{display:block !important}
@@ -1111,8 +1242,10 @@ ul{margin:0; padding:0; list-style:none}
         <p>大病初愈，最难的往往不是读懂病理分期，而是饭桌上的忌口、夜晚翻身时的隐痛、能否洗澡炒菜与乘机出行的顾虑。以下建议结合现代肿瘤营养学与胸外科护理规范，解答你出院后每天都在问的生活细节。</p>
       </div>
       <div>
-        <label class="eyebrow" for="guideSearch" style="display:block; margin-bottom:8px; color:#8fa4a9">搜索生活细节或指南主题</label>
-        <input class="search-field" id="guideSearch" type="search" placeholder="输入搜索：如 发物 / 洗澡 / 靶向 / 运动 / 八段锦 / 雾霾 / 二手烟 / 装修..." autocomplete="off">
+        <div class="search-input-wrap" id="searchWrap">
+          <input class="search-field" id="guideSearch" type="search" placeholder="输入搜索：如 发物 / 洗澡 / 靶向 / 运动 / 八段锦 / 雾霾 / 二手烟 / 装修..." autocomplete="off">
+          <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清空搜索" title="清空搜索">&times;</button>
+        </div>
         <p class="search-meta" id="searchMeta" aria-live="polite">当前显示 18 条生活建议与指南</p>
       </div>
     </div>
@@ -1444,6 +1577,42 @@ ul{margin:0; padding:0; list-style:none}
             </li>
           </ul>
           <p class="mono-s" style="color:#8fa4a9">指导原则：雾霾 AQI&gt;100 坚决不晨练 · 彻底清除二手与三手烟 · 严禁室内燃香熏艾蚊香 · 净化器选 HEPA 坚决避开臭氧</p>
+        </div>
+      </div>
+
+      <!-- 生活 13: 靶向药与化疗不良反应居家自救 -->
+      <div class="grow" data-cat="life" data-text="副作用 不良反应 靶向药 奥希替尼 吉非替尼 阿美替尼 伏美替尼 达可替尼 辅助化疗 皮疹 痤疮 甲沟炎 嵌甲 脓疱 口腔溃疡 腹泻 拉肚子 蒙脱石散 百多邦 莫匹罗星 碘伏 炉甘石 护理 自救">
+        <button class="grow-btn" type="button" aria-expanded="false">
+          <span class="grow-title">🩹 靶向药与化疗不良反应居家自救：甲沟炎肿痛、面部皮疹、口腔溃疡、腹泻怎么科学应对？</span>
+          <span class="grow-src">CSCO 抗肿瘤药物不良反应管理</span>
+          <span class="grow-src">居家生活指南</span>
+          <span><span class="chip" style="background:#047857; color:#fff; border-color:#047857">生活必读 · 副作用</span></span>
+          <svg class="chev" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 7l5 5 5-5"/></svg>
+        </button>
+        <div class="grow-body">
+          <ul>
+            <li><strong>甲沟炎 / 嵌甲化脓（手指脚趾红肿、甲周剧痛）：</strong>
+              <br>• <strong>修剪原则</strong>：平剪指甲，严禁深挖两角，留出 1~2 毫米白边；穿宽松纯棉袜与宽头软底鞋，严禁紧头皮鞋挤压足趾；
+              <br>• <strong>轻度红肿（1 级）</strong>：每日用温水加少量医用碘伏（1:10 稀释至淡黄色）浸泡手指/足趾 15~20 分钟，棉签擦干后外涂<strong>百多邦（莫匹罗星软膏）</strong>或夫西地酸乳膏；
+              <br>• <strong>化脓息肉肉芽增生（2 级）</strong>：切莫自行用针挑破或去普通修脚店修脚，应由外科换药室无菌引流，遵医嘱口服头孢类抗生素，切忌硬扛导致甲床骨髓炎。
+            </li>
+            <li><strong>面部与胸背部皮疹 / 痤疮样脓疱（发痒发烫）：</strong>
+              <br>• <strong>温和清洁</strong>：温水洗脸，严禁用碱性肥皂、深层去角质洁面乳及含酒精爽肤水；
+              <br>• <strong>保湿与防晒</strong>：选择无香精医用舒缓保湿霜（如维生素E乳或甘油乳），出门戴遮阳帽或打伞（紫外线会显著加重靶向药皮疹）；
+              <br>• <strong>轻中度止痒对症</strong>：局部微痒发红可外涂<strong>炉甘石洗剂</strong>；丘疹脓疱可在医生指导下局部点涂弱效激素软膏（如地奈德乳膏）或红霉素软膏，严禁指甲挤压痘痘防重度蜂窝织炎。
+            </li>
+            <li><strong>口腔黏膜炎 / 口腔溃疡（进食刺痛、说话痛）：</strong>
+              <br>• <strong>餐后漱口</strong>：饭后及睡前使用<strong>温生理盐水</strong>或专用康复新液含漱 2~3 分钟；
+              <br>• <strong>刷牙工具</strong>：换用极细超柔软毛牙刷，进食温凉软烂食物，避免太烫、酸辣、粗硬（如坚果煎饼）摩擦创面；
+              <br>• <strong>局部止痛促愈</strong>：溃疡局部可点涂重组人表皮生长因子凝胶或贴敷口腔溃疡散，严重进食痛者可在饭前用利多卡因凝胶局部止痛后进餐。
+            </li>
+            <li><strong>轻中度腹泻（每日稀便 1~2 次）：</strong>
+              <br>• <strong>饮食调整</strong>：暂停高纤维粗粮、生冷瓜果与油腻汤水，进食白米粥、软面条、蒸苹果泥与去皮软鸡肉；
+              <br>• <strong>补液防脱水</strong>：少量多次饮用温开水或口服补液盐散（防止低钾低钠电解质紊乱）；
+              <br>• <strong>对症用药</strong>：若大便呈水样，饭前空腹服用<strong>蒙脱石散（思密达）</strong>保护肠道黏膜（需与靶向药错开 2 小时）；若每日水样便 &gt;3 次伴脱水无力，属于黄色警戒，需联系医生排查严重药物性肠炎。
+            </li>
+          </ul>
+          <p class="mono-s" style="color:#8fa4a9">指导原则：甲沟炎碘伏温泡涂百多邦 · 皮疹温水清洁防晒 · 口腔盐水漱口软食 · 腹泻白粥补盐水防脱水</p>
         </div>
       </div>
 
@@ -1819,6 +1988,22 @@ ul{margin:0; padding:0; list-style:none}
         <h3>个人情况填报</h3>
         <p class="panel-sub">共 11 项临床指标 · 约需 2-3 分钟 · 已支持手机本地记忆保存</p>
 
+        <!-- 病理单快速找词指南 (大白话折叠卡) -->
+        <details class="path-guide-card">
+          <summary class="path-guide-summary">
+            <span>📄 【病理单看懂指引】手把手教您对照报告单找指标</span>
+            <span style="font-size:11px; font-weight:normal; color:#8fa4a9">点击展开速查 ▾</span>
+          </summary>
+          <div class="path-guide-body">
+            • <strong>分期在哪看：</strong>寻找报告单最下方的“病理诊断”或出院小结，找类似 <code>pT1bN0M0 (IA2期)</code> 的编码；<br>
+            • <strong>腺癌亚型：</strong>显微镜所见里若出现“微乳头”或“实体型”，属于低分化高危亚型；贴壁/腺泡型为高中分化；<br>
+            • <strong>淋巴结清扫：</strong>看送检组别后面的数字，分子为 0（如 0/15）表示无转移（N0）；<br>
+            • <strong>胸膜侵犯：</strong>写“PL1 / PL2”表示脏层胸膜受浸润（阳性）；写“PL0”为阴性；<br>
+            • <strong>切缘：</strong>写“各切缘未见癌”即为 R0 根治性切除。<br>
+            <em>💡 提示：下方每个选项下方均带有专属的“报告找词”微提示，您可以一边看病理报告一边直接对照选择。</em>
+          </div>
+        </details>
+
         <!-- 1. 手术时间 -->
         <div class="field">
           <label class="field-label" for="opDate">手术距今时间</label>
@@ -1835,6 +2020,7 @@ ul{margin:0; padding:0; list-style:none}
         <div class="field">
           <fieldset>
             <legend>病理分期 (pTNM 第 8 版)</legend>
+            <span class="field-hint">💡 报告找词：看报告末尾“病理诊断”，找 pTNM 编码。若写 pT1a/b/c 且无转移选 IA 期；若伴有局部侵犯或肺门淋巴结转移选 II 期；纵隔淋巴结转移选 III 期。</span>
             <div class="opts">
               <label class="opt"><input type="radio" name="stage" value="0"><span>IA 期 (≤3cm 无转移)</span></label>
               <label class="opt"><input type="radio" name="stage" value="8"><span>IB 期 (3-4cm)</span></label>
@@ -1849,6 +2035,7 @@ ul{margin:0; padding:0; list-style:none}
         <div class="field">
           <fieldset>
             <legend>病理组织学亚型</legend>
+            <span class="field-hint">💡 报告找词：看显微镜组织亚型百分比。若见“微乳头型 (Micropapillary)”或“实体型 (Solid)”请选低分化腺癌；若主要为“贴壁型 (Lepidic)”或“腺泡型 (Acinar)”选高/中分化。</span>
             <div class="opts">
               <label class="opt"><input type="radio" name="histo" value="2"><span>高/中分化腺癌 (贴壁/腺泡型)</span></label>
               <label class="opt"><input type="radio" name="histo" value="7"><span>低分化腺癌 (微乳头/实体型)</span></label>
@@ -1863,6 +2050,7 @@ ul{margin:0; padding:0; list-style:none}
         <div class="field">
           <fieldset>
             <legend>区域淋巴结清扫状态</legend>
+            <span class="field-hint">💡 报告找词：看送检淋巴结列表中“阳性数/总数”。0/X（如 0/14）选 N0；若第 10~14 组（肺门/叶间）阳性选 N1；第 2~9 组（纵隔/隆突下）阳性选 N2。</span>
             <div class="opts">
               <label class="opt"><input type="radio" name="node" value="0"><span>N0 (送检淋巴结均无转移)</span></label>
               <label class="opt"><input type="radio" name="node" value="8"><span>N1 (同侧支气管/肺门转移)</span></label>
@@ -1876,6 +2064,7 @@ ul{margin:0; padding:0; list-style:none}
         <div class="field">
           <fieldset>
             <legend>驱动基因突变状态 (EGFR / ALK 等)</legend>
+            <span class="field-hint">💡 报告找词：查看基因检测报告单。亚裔腺癌 50%~60% 伴 EGFR 敏感突变（19del 或 L858R）；若提示 ALK 融合阳性选 ALK；全未检出选全阴性。</span>
             <div class="opts">
               <label class="opt"><input type="radio" name="gene" value="0"><span>EGFR 突变阳性 (如 19del/L858R)</span></label>
               <label class="opt"><input type="radio" name="gene" value="1"><span>ALK / ROS1 / RET 融合阳性</span></label>
@@ -1889,6 +2078,7 @@ ul{margin:0; padding:0; list-style:none}
         <div class="field">
           <fieldset>
             <legend>胸膜侵犯 (VPI) / 脉管神经癌栓 (LVI)</legend>
+            <span class="field-hint">💡 报告找词：寻找“脏层胸膜侵犯 (VPI)”或弹力纤维染色 PL1/PL2 即为阳性；PL0 为阴性。若见“血管内癌栓 / 淋巴管癌栓 (LVI)”亦属阳性。</span>
             <div class="opts">
               <label class="opt"><input type="radio" name="invasion" value="0"><span>阴性 (无胸膜及脉管神经侵犯)</span></label>
               <label class="opt"><input type="radio" name="invasion" value="9"><span>阳性 (见脏层胸膜侵犯或脉管癌栓)</span></label>
@@ -1901,6 +2091,7 @@ ul{margin:0; padding:0; list-style:none}
         <div class="field">
           <fieldset>
             <legend>肿瘤分化程度</legend>
+            <span class="field-hint">💡 报告找词：查看分化等级。报告标注 G1 为高分化，G2 为中分化，G3 为低分化或未分化。</span>
             <div class="opts">
               <label class="opt"><input type="radio" name="diff" value="0"><span>高分化 (G1)</span></label>
               <label class="opt"><input type="radio" name="diff" value="4"><span>中分化 (G2)</span></label>
@@ -1914,6 +2105,7 @@ ul{margin:0; padding:0; list-style:none}
         <div class="field">
           <fieldset>
             <legend>手术切除切缘完整性</legend>
+            <span class="field-hint">💡 报告找词：查看支气管残端、血管切缘。报告写“切缘阴性 / 未见癌细胞累及”选 R0 根治性切除；若残端见癌选 R1/R2。</span>
             <div class="opts">
               <label class="opt"><input type="radio" name="margin" value="0"><span>R0 根治性切除 (切缘阴性干净)</span></label>
               <label class="opt"><input type="radio" name="margin" value="14"><span>R1/R2 切缘显微或肉眼阳性</span></label>
@@ -1926,6 +2118,7 @@ ul{margin:0; padding:0; list-style:none}
         <div class="field">
           <fieldset>
             <legend>术后辅助靶向/化疗规范性</legend>
+            <span class="field-hint">💡 填报指引：分期为 IB~III 期且已遵医嘱按时服用靶向药（如奥希替尼）或完成 4 周期化疗选已规范完成；IA 期极早期通常医嘱无需辅助治疗。</span>
             <div class="opts">
               <label class="opt"><input type="radio" name="adjuvant" value="-6"><span>已规范完成辅助化疗或正在靶向治疗</span></label>
               <label class="opt"><input type="radio" name="adjuvant" value="0"><span>病理早期无需辅助治疗 (如 IA期)</span></label>
@@ -2049,11 +2242,18 @@ ul{margin:0; padding:0; list-style:none}
             <li><b>03</b><span>数据已自动保存在你的手机，刷新页面后仍然有效。</span></li>
           </ul>
 
+          <!-- 定制化心理释疑与科学行动策略盒 -->
+          <div id="reassuranceBox"></div>
+
           <p class="mono-s muted" style="margin-top:28px">评分构成明细</p>
           <ul class="breakdown" id="breakdown"></ul>
 
           <div class="result-actions">
-            <button class="btn" type="button" id="printBtn">打印本次就诊评估单
+            <button class="btn" type="button" id="genShareCardBtn" style="background:#14252B; border-color:#14252B">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><circle cx="5.5" cy="5.5" r="1.5"/><path d="M14 10l-4-4-6 6"/></svg>
+              📸 生成就诊备忘长图发微信
+            </button>
+            <button class="btn-ghost" type="button" id="printBtn">打印本次就诊评估单
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 6V2h8v4"/><rect x="2" y="6" width="12" height="5"/><path d="M4 11h8v3H4z"/></svg>
             </button>
             <a class="btn-ghost" href="#schedule" id="jumpToScheduleBtn">查看我的随访日历</a>
@@ -2113,6 +2313,48 @@ ul{margin:0; padding:0; list-style:none}
         </div>
       </div>
     </div>
+
+    <!-- 增强 CT 复查行前 5 大避坑备忘卡 -->
+    <div class="pre-ct-box" id="preCtBox">
+      <div class="pre-ct-header">
+        <div style="display:flex; align-items:center; gap:8px">
+          <span style="font-size:22px">⚠️</span>
+          <h3 style="font-size:18px; margin:0; color:#991B1B">胸部增强 CT 复查“行前 5 大避坑备忘”（必读）</h3>
+        </div>
+        <span class="mono-s" style="color:#B91C1C; font-size:12px; font-weight:600">放射科造影安全硬核规范</span>
+      </div>
+      <p class="mono-s muted" style="margin:8px 0 14px; font-size:12px; line-height:1.6">
+        肺癌术后复查绝大多数需打造影剂（静脉注射含碘对比剂）。许多患者因不知以下规则被放射科护士退号耽误就诊，就医前 48 小时务必逐条核对：
+      </p>
+      <div class="pre-ct-grid">
+        <div class="pre-ct-item">
+          <div class="pre-ct-tag">01 / 严格空腹</div>
+          <h4>检查前禁食 4~6 小时</h4>
+          <p>注射碘造影剂易引起胃肠迷走神经反应诱发恶心呕吐。若胃内有食物极易发生呕吐物误吸入气管窒息！可饮用少量白开水（防脱水），但禁食牛奶、豆浆及固体食物。</p>
+        </div>
+        <div class="pre-ct-item">
+          <div class="pre-ct-tag">02 / 停二甲双胍</div>
+          <h4>检查前后停用 48 小时</h4>
+          <p>糖尿病服用二甲双胍者，造影剂排泄可能引起暂时性肾功能减退，导致双胍在体内蓄积诱发致死性乳酸酸中毒！必须在检查前 48 小时停药，检查后 48 小时复查肾功能正常后方可恢复。</p>
+        </div>
+        <div class="pre-ct-item">
+          <div class="pre-ct-tag">03 / 备好肾功报告</div>
+          <h4>需带 1~3 个月内血肌酐</h4>
+          <p>碘对比剂需经肾脏滤过排泄。三甲医院放射科硬性要求必须凭近期血肌酐值评估 eGFR。若既往有肾病或无近期肾功，当天可能无法检查，挂号时请让门诊医生提前开单抽血。</p>
+        </div>
+        <div class="pre-ct-item">
+          <div class="pre-ct-tag">04 / 带齐既往胶片</div>
+          <h4>带齐手术前后所有旧片</h4>
+          <p>CT 是对比的艺术！肺切除后肺组织会变形牵拉。医生必须在新片与旧片之间“逐毫米找差异”，判断结节是否新发或增大。切勿只带纸质报告，务必带齐原始胶片或电子云盘。</p>
+        </div>
+        <div class="pre-ct-item">
+          <div class="pre-ct-tag">05 / 留观与排毒</div>
+          <h4>留观 30 分钟 + 多喝水 2 升</h4>
+          <p>绝大多数造影剂过敏反应发生在注射后 30 分钟内。打完后切勿立刻离开医院，必须在留观室静坐 30 分钟无不适再走；回家后 24 小时内多饮温水 1500~2000ml 加快造影剂排泄护肾。</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -2141,8 +2383,9 @@ ul{margin:0; padding:0; list-style:none}
       <div class="faq-chips">
         <button class="faq-chip" type="button" data-q="我的病理切缘是否彻底（R0）？需要做基因检测吗？">+ 切缘与基因检测</button>
         <button class="faq-chip" type="button" data-q="以我目前的分期，是否需要接受辅助靶向药或化疗？">+ 辅助治疗方案</button>
+        <button class="faq-chip" type="button" data-q="口服靶向药后出现轻微甲沟炎肿痛或皮疹，居家可以用百多邦或炉甘石吗？何时需联系医生调量？">+ 靶向药副作用对症</button>
+        <button class="faq-chip" type="button" data-q="下次做胸部薄层增强 CT 复查需要提前空腹吗？何时停用二甲双胍？需要提前查血肌酐吗？">+ 增强CT造影准备</button>
         <button class="faq-chip" type="button" data-q="术侧胸壁切口局部发麻、发木刺痛是正常的吗？大概多久缓解？">+ 神经痛与切口麻木</button>
-        <button class="faq-chip" type="button" data-q="下次做胸部薄层增强 CT 复查需要提前空腹吗？何时停用二甲双胍？">+ 增强CT注意事项</button>
         <button class="faq-chip" type="button" data-q="平时口服靶向药，饮食上有哪些绝对不能吃的水果或食物？">+ 药物饮食禁忌</button>
         <button class="faq-chip" type="button" data-q="我平时的血氧饱和度和散步心率大概维持在多少最合适？">+ 运动血氧指标</button>
         <button class="faq-chip" type="button" data-q="以我目前的肺功能，适合练习八段锦或慢跑吗？雾霾天居家需要注意什么？">+ 运动与空气防护</button>
@@ -2154,8 +2397,9 @@ ul{margin:0; padding:0; list-style:none}
       
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; flex-wrap:wrap; gap:10px">
         <span class="mono-s muted" id="noteSavedHint">已自动保存于本地</span>
-        <div style="display:flex; gap:10px">
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
           <button class="btn-text" type="button" id="copyNoteBtn">复制问诊清单</button>
+          <button class="btn-text" type="button" id="genShareCardFromNoteBtn" style="color:var(--verm); font-weight:600">📸 生成就诊备忘长图发微信</button>
           <button class="btn-text" type="button" id="clearNoteBtn" style="color:var(--muted)">清空便签</button>
         </div>
       </div>
@@ -2324,6 +2568,32 @@ ul{margin:0; padding:0; list-style:none}
   </div>
 </div>
 
+<!-- ===================== MODAL 3: 就诊随访备忘长图卡片生成弹窗 ===================== -->
+<div class="modal-backdrop" id="shareCardModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="shareCardTitle">
+  <div class="modal-dialog" style="max-width:560px">
+    <button class="modal-close-btn" id="closeShareCardModalBtn" type="button" aria-label="关闭">&times;</button>
+    <h3 id="shareCardTitle" style="font-size:22px; margin-bottom:4px">📸 就诊备忘长图卡片</h3>
+    <p class="mono-s muted">已将您的复查评估、预后率与门诊提问清单排版为精美手机长图</p>
+    
+    <div class="share-tip-box" style="margin-top:12px">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm-.75 4.5a.75.75 0 011.5 0v4a.75.75 0 01-1.5 0v-4zm.75 7.25a.875.875 0 110-1.75.875.875 0 010 1.75z"/></svg>
+      <span><strong>长按保存提示：</strong>长按下方长图即可【保存到手机相册】或直接【发送给微信好友/医生】</span>
+    </div>
+
+    <div class="share-canvas-container" id="shareCanvasContainer">
+      <div id="shareCardLoading" style="padding:40px; color:var(--muted)">正在为您绘制高保真备忘长图...</div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; gap:10px; margin-top:14px; flex-wrap:wrap">
+      <button class="btn" type="button" id="downloadShareCardBtn" style="flex:1">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v9m-4-4l4 4 4-4M2 14h12"/></svg>
+        下载高清长图到本机
+      </button>
+      <button class="btn-ghost" type="button" id="dismissShareCardBtn">关闭预览</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== CLOSING ===================== -->
 <section class="closing">
   <div class="closing-line" aria-hidden="true"></div>
@@ -2395,6 +2665,15 @@ ul{margin:0; padding:0; list-style:none}
     <path d="M8 13V3M3 8l5-5 5 5"/>
   </svg>
 </button>
+
+<!-- 移动端底部悬浮胶囊快捷栏 (直达核心高频功能) -->
+<nav class="mobile-quick-dock" id="mobileQuickDock" aria-label="快捷直达导航">
+  <a class="dock-item" href="#guides"><span class="dock-icon">🏡</span><span>生活</span></a>
+  <a class="dock-item" href="#triage"><span class="dock-icon">🚨</span><span>自查</span></a>
+  <a class="dock-item" href="#risk"><span class="dock-icon">📊</span><span>测算</span></a>
+  <a class="dock-item" href="#schedule"><span class="dock-icon">📅</span><span>排期</span></a>
+  <a class="dock-item" href="#qa"><span class="dock-icon">📝</span><span>便签</span></a>
+</nav>
 
 <script>
 (function () {
@@ -2843,13 +3122,35 @@ ul{margin:0; padding:0; list-style:none}
 
   function validate() {
     var missing = [];
-    if (!document.getElementById('opDate').value) missing.push('手术距今时间');
+    var elements = [];
+
+    var opDateEl = document.getElementById('opDate');
+    if (!opDateEl.value) {
+      missing.push('手术距今时间');
+      elements.push(opDateEl.closest('.field') || opDateEl);
+    }
+
     ['stage', 'histo', 'node', 'gene', 'invasion', 'diff', 'margin', 'adjuvant', 'smoke'].forEach(function (n) {
-      if (selected(n) === null) missing.push(LABELS[n]);
+      if (selected(n) === null) {
+        missing.push(LABELS[n]);
+        var radio = form.querySelector('input[name="' + n + '"]');
+        if (radio) elements.push(radio.closest('.field'));
+      }
     });
-    if (!document.getElementById('age').value) missing.push('年龄段');
-    if (selected('recov') === null) missing.push('自主体能状态');
-    return missing;
+
+    var ageEl = document.getElementById('age');
+    if (!ageEl.value) {
+      missing.push('年龄段');
+      elements.push(ageEl.closest('.field') || ageEl);
+    }
+
+    if (selected('recov') === null) {
+      missing.push('自主体能状态');
+      var recovRadio = form.querySelector('input[name="recov"]');
+      if (recovRadio) elements.push(recovRadio.closest('.field'));
+    }
+
+    return { labels: missing, elements: elements };
   }
 
   function compute() {
@@ -3001,6 +3302,36 @@ ul{margin:0; padding:0; list-style:none}
       });
     }
 
+    // 渲染定制化心理释疑与科学行动策略
+    var reassuranceBox = document.getElementById('reassuranceBox');
+    if (reassuranceBox) {
+      var rHtml = '';
+      if (band.key === 'low') {
+        rHtml = '<div class="reassurance-card">' +
+          '<div class="reassurance-title">🌿 专家临床心理释疑：安心回归，避免过度警觉</div>' +
+          '<div class="reassurance-text">' +
+            '恭喜您！您的病理特征处于极低/低危安全区间，切除彻底且无高危复发因素。大病初愈切忌终日提心吊胆，长期的精神内耗与复查焦虑反而会干扰自主神经与免疫监视。' +
+            '<strong>把复查当成每年给私家车做例行年检</strong>，遵医嘱按时复查，放下心理包袱，尽情拥抱烟火日常与户外散步，身心愉悦是最好的天然免疫剂！' +
+          '</div></div>';
+      } else if (band.key === 'medium') {
+        rHtml = '<div class="reassurance-card med">' +
+          '<div class="reassurance-title" style="color:#d97706">🛡️ 专家临床行动策略：主动防御，守住关键前两年</div>' +
+          '<div class="reassurance-text">' +
+            '您的病理指标显示处于中度预后区间（伴轻度危险因素）。请不必惊慌，<strong>肺癌术后复发的 80% 均集中在术后前 2 年</strong>。' +
+            '只要守好术后前 24 个月的规律复查时间窗（每 3~6 个月薄层 CT），并遵医嘱按时服用辅助治疗药物，绝大多数微小病灶都能被医疗手段牢牢拦截在萌芽状态。' +
+          '</div></div>';
+      } else {
+        rHtml = '<div class="reassurance-card high">' +
+          '<div class="reassurance-title" style="color:var(--verm)">❤️ 致病友的重要释疑：高危绝对不等于复发，而是开启强防御盾</div>' +
+          '<div class="reassurance-text">' +
+            '请千万不要被“高危”字眼吓倒！在现代肿瘤学中，<strong>“高危风险”是指我们需要更密集、更灵敏的监测雷达，绝非宣判结果</strong>。<br>' +
+            '<strong>现代医学已拥有成熟强劲的阻击武器：</strong>对于伴有驱动基因突变或淋巴结转移者，术后规范辅助靶向治疗（如三代 EGFR-TKI）或辅助免疫治疗，已证实能<strong>降低 50%~80% 的疾病复发风险</strong>！<br>' +
+            '按时进行胸腹薄层增强 CT 与头颅 MRI 复查，是把微小火星扑灭在最萌芽状态的最高胜率打法。把精力聚焦在吃好、睡好、练好呼吸、按时吃药复查上，就是对肿瘤最强有力的反击！' +
+          '</div></div>';
+      }
+      reassuranceBox.innerHTML = rHtml;
+    }
+
     if (saveIt) {
       var formValues = {};
       var inputs = form.querySelectorAll('input, select');
@@ -3017,11 +3348,31 @@ ul{margin:0; padding:0; list-style:none}
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var missing = validate();
-    if (missing.length) {
-      errBox.textContent = '还有 ' + missing.length + ' 项未填写：' + missing.join('、') + '。请补充完整后再生成评估。';
+    var v = validate();
+    if (v.labels.length) {
+      errBox.textContent = '还有 ' + v.labels.length + ' 项未填写：' + v.labels.join('、') + '。请补充完整后再生成评估。';
       errBox.classList.add('show');
-      errBox.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+
+      // 移除旧高亮并添加红框抖动
+      Array.prototype.forEach.call(form.querySelectorAll('.field-error-highlight'), function (el) {
+        el.classList.remove('field-error-highlight');
+      });
+      v.elements.forEach(function (el) {
+        if (el) el.classList.add('field-error-highlight');
+      });
+
+      if (v.elements[0]) {
+        v.elements[0].scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+      } else {
+        errBox.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+      }
+
+      setTimeout(function () {
+        v.elements.forEach(function (el) {
+          if (el) el.classList.remove('field-error-highlight');
+        });
+      }, 2500);
+
       return;
     }
     errBox.classList.remove('show');
@@ -4094,6 +4445,325 @@ ul{margin:0; padding:0; list-style:none}
       });
     }
   });
+
+  /* ---------- 搜索框一键清除与状态同步 ---------- */
+  var searchWrap = document.getElementById('searchWrap');
+  var searchClearBtn = document.getElementById('searchClearBtn');
+
+  if (search && searchWrap && searchClearBtn) {
+    search.addEventListener('input', function () {
+      searchWrap.classList.toggle('has-text', search.value.trim().length > 0);
+    });
+    searchClearBtn.addEventListener('click', function () {
+      search.value = '';
+      searchWrap.classList.remove('has-text');
+      applyGuideFilter();
+      search.focus();
+    });
+  }
+
+  /* ---------- 移动端底部悬浮胶囊导航滚动显隐 ---------- */
+  var mobileQuickDock = document.getElementById('mobileQuickDock');
+  if (mobileQuickDock) {
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 300) {
+        mobileQuickDock.classList.add('show');
+      } else {
+        mobileQuickDock.classList.remove('show');
+      }
+    }, { passive: true });
+  }
+
+  /* ---------- 就诊备忘长图卡片生成引擎 (HTML5 Canvas 零依赖) ---------- */
+  var shareCardModalBackdrop = document.getElementById('shareCardModalBackdrop');
+  var closeShareCardModalBtn = document.getElementById('closeShareCardModalBtn');
+  var dismissShareCardBtn = document.getElementById('dismissShareCardBtn');
+  var downloadShareCardBtn = document.getElementById('downloadShareCardBtn');
+  var genShareCardBtn = document.getElementById('genShareCardBtn');
+  var genShareCardFromNoteBtn = document.getElementById('genShareCardFromNoteBtn');
+  var shareCanvasContainer = document.getElementById('shareCanvasContainer');
+  var currentShareCardDataUrl = '';
+
+  function drawRoundRect(ctx, x, y, width, height, radius, fillColor, strokeColor) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    if (fillColor) {
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+    }
+    if (strokeColor) {
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    var paragraphs = text.split('\n');
+    var curY = y;
+    for (var p = 0; p < paragraphs.length; p++) {
+      var para = paragraphs[p];
+      if (!para.trim()) {
+        curY += lineHeight * 0.5;
+        continue;
+      }
+      var chars = para.split('');
+      var line = '';
+      for (var n = 0; n < chars.length; n++) {
+        var testLine = line + chars[n];
+        if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+          ctx.fillText(line, x, curY);
+          line = chars[n];
+          curY += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, curY);
+      curY += lineHeight;
+    }
+    return curY;
+  }
+
+  function generateShareCard() {
+    if (!shareCanvasContainer) return;
+    shareCanvasContainer.innerHTML = '<div style="padding:40px; color:var(--muted)">正在为您绘制高保真备忘长图...</div>';
+
+    setTimeout(function () {
+      try {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var width = 750;
+
+        // 收集待绘制数据
+        var pid = currentPID || 'LC-2026-XXXX';
+        var dStr = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        var r = lastComputedResult;
+        var note = noteText ? noteText.value.trim() : '';
+        if (!note) {
+          note = '• 术侧胸壁切口发麻刺痛大概多久缓解？\n• 目前分期后续是否需辅助靶向或免疫治疗？\n• 下次胸部薄层增强CT复查的确切时间与空腹要求。';
+        }
+
+        var m = mmrcSlider ? parseInt(mmrcSlider.value, 10) : 1;
+        var v = vasSlider ? parseInt(vasSlider.value, 10) : 2;
+        var pWeight = (weightInput && weightInput.value) ? weightInput.value : '60';
+
+        // 动态计算便签文本高度
+        ctx.font = '22px "Noto Sans SC", sans-serif';
+        var noteLines = [];
+        note.split('\n').forEach(function (para) {
+          var chars = para.split('');
+          var l = '';
+          for (var i = 0; i < chars.length; i++) {
+            var tl = l + chars[i];
+            if (ctx.measureText(tl).width > 630 && i > 0) {
+              noteLines.push(l);
+              l = chars[i];
+            } else {
+              l = tl;
+            }
+          }
+          noteLines.push(l);
+        });
+        var noteBlockHeight = Math.max(140, 60 + noteLines.length * 32);
+
+        // 计算总高度
+        var totalHeight = 220 + 310 + 190 + noteBlockHeight + 170 + 90;
+        canvas.width = width;
+        canvas.height = totalHeight;
+
+        // 1. 底色
+        ctx.fillStyle = '#F4F1EB';
+        ctx.fillRect(0, 0, width, totalHeight);
+
+        // 2. 顶部主视觉 Header Banner
+        ctx.fillStyle = '#14252B';
+        ctx.fillRect(0, 0, width, 180);
+
+        ctx.fillStyle = '#8FA4A9';
+        ctx.font = '600 15px "IBM Plex Mono", monospace';
+        ctx.fillText('RECOVERY ATLAS · 复航平台', 40, 48);
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 30px "Noto Serif SC", serif';
+        ctx.fillText('肺癌术后全周期就诊与随访备忘卡', 40, 96);
+
+        ctx.fillStyle = '#C8C6C0';
+        ctx.font = '16px "Noto Sans SC", sans-serif';
+        ctx.fillText('随访识别码：' + pid + '    |    生成日期：' + dStr, 40, 140);
+
+        var curY = 210;
+
+        // 3. 卡片 1: 复发风险评估与预后推算
+        drawRoundRect(ctx, 40, curY, 670, 280, 8, '#FFFFFF', '#E2DED6');
+
+        ctx.fillStyle = '#D65A3A';
+        ctx.font = 'bold 20px "Noto Sans SC", sans-serif';
+        ctx.fillText('01 / 复发风险评估与预后推算', 64, curY + 40);
+
+        ctx.fillStyle = '#667176';
+        ctx.font = '15px "Noto Sans SC", sans-serif';
+        ctx.fillText('依据 AJCC 第 8 版 pTNM 分期与国际权威列线图模型', 370, curY + 40);
+
+        ctx.strokeStyle = '#E8E5DE';
+        ctx.beginPath();
+        ctx.moveTo(64, curY + 58);
+        ctx.lineTo(686, curY + 58);
+        ctx.stroke();
+
+        if (r) {
+          ctx.fillStyle = '#182126';
+          ctx.font = 'bold 24px "Noto Sans SC", sans-serif';
+          ctx.fillText('评估等级：' + r.band.name, 64, curY + 98);
+
+          ctx.font = '600 18px "Noto Sans SC", sans-serif';
+          ctx.fillStyle = '#2A353A';
+          ctx.fillText('列线图评分：' + r.total + ' / 100 分', 480, curY + 98);
+
+          ctx.fillStyle = '#668B68';
+          ctx.font = 'bold 22px "Noto Sans SC", sans-serif';
+          ctx.fillText('预估 3 年无复发率 (RFS)：' + r.rfs.rfs3 + '%', 64, curY + 145);
+          ctx.fillText('预估 5 年无复发率 (RFS)：' + r.rfs.rfs5 + '%', 380, curY + 145);
+
+          ctx.fillStyle = '#2A353A';
+          ctx.font = '16px "Noto Sans SC", sans-serif';
+          var planTxt = '随访方案建议：' + r.band.planContent;
+          wrapText(ctx, planTxt, 64, curY + 195, 620, 24);
+        } else {
+          ctx.fillStyle = '#667176';
+          ctx.font = '18px "Noto Sans SC", sans-serif';
+          ctx.fillText('提示：尚未在系统中生成评估结果。', 64, curY + 110);
+          ctx.font = '16px "Noto Sans SC", sans-serif';
+          ctx.fillText('建议在系统“05 / 复发风险评估”模块填写11项病理指标后，一键生成精准率。', 64, curY + 150);
+        }
+
+        curY += 310;
+
+        // 4. 卡片 2: 术后康复状态自评与营养指标
+        drawRoundRect(ctx, 40, curY, 670, 160, 8, '#FFFFFF', '#E2DED6');
+
+        ctx.fillStyle = '#14252B';
+        ctx.font = 'bold 20px "Noto Sans SC", sans-serif';
+        ctx.fillText('02 / 术后康复状态与营养监测', 64, curY + 40);
+
+        ctx.strokeStyle = '#E8E5DE';
+        ctx.beginPath();
+        ctx.moveTo(64, curY + 58);
+        ctx.lineTo(686, curY + 58);
+        ctx.stroke();
+
+        ctx.fillStyle = '#2A353A';
+        ctx.font = '18px "Noto Sans SC", sans-serif';
+        ctx.fillText('气短评级：mMRC ' + m + ' 级 (术后恢复代偿期)', 64, curY + 96);
+        ctx.fillText('胸壁隐痛：VAS ' + v + ' 分 (轻度神经牵拉)', 380, curY + 96);
+
+        ctx.font = '16px "Noto Sans SC", sans-serif';
+        ctx.fillStyle = '#667176';
+        var protMin = Math.round(pWeight * 1.2);
+        var protMax = Math.round(pWeight * 1.5);
+        ctx.fillText('营养目标：体重 ' + pWeight + ' kg · 每日推荐优质蛋白 ' + protMin + '~' + protMax + ' 克 (蛋/奶/鱼/禽)', 64, curY + 132);
+
+        curY += 190;
+
+        // 5. 卡片 3: 门诊提问清单 (便签本)
+        drawRoundRect(ctx, 40, curY, 670, noteBlockHeight, 8, '#FFFDF8', '#F5E6B3');
+
+        ctx.fillStyle = '#B45309';
+        ctx.font = 'bold 20px "Noto Sans SC", sans-serif';
+        ctx.fillText('03 / 本次门诊重点咨询主治医生清单', 64, curY + 40);
+
+        ctx.strokeStyle = '#FDE68A';
+        ctx.beginPath();
+        ctx.moveTo(64, curY + 56);
+        ctx.lineTo(686, curY + 56);
+        ctx.stroke();
+
+        ctx.fillStyle = '#1F2937';
+        ctx.font = '20px "Noto Sans SC", sans-serif';
+        wrapText(ctx, note, 64, curY + 92, 620, 32);
+
+        curY += noteBlockHeight + 30;
+
+        // 6. 卡片 4: 紧急求助红旗提示
+        drawRoundRect(ctx, 40, curY, 670, 130, 8, '#FEF2F2', '#FECACA');
+
+        ctx.fillStyle = '#DC2626';
+        ctx.font = 'bold 18px "Noto Sans SC", sans-serif';
+        ctx.fillText('🚨 红旗警报提示（出现下列情况请立即就医）：', 64, curY + 36);
+
+        ctx.fillStyle = '#991B1B';
+        ctx.font = '15px "Noto Sans SC", sans-serif';
+        ctx.fillText('1. 突发大口咯血或暗红色血块；', 64, curY + 68);
+        ctx.fillText('2. 剧烈撕裂样胸痛伴大汗淋漓、重度呼吸困难；', 64, curY + 94);
+        ctx.fillText('3. 持续高热>38.5℃。紧急情况请立即拨打 120。', 380, curY + 94);
+
+        curY += 160;
+
+        // 7. 底部声明
+        ctx.fillStyle = '#9CA3AF';
+        ctx.font = '14px "Noto Sans SC", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('本备忘卡由患者本人填报生成，供门诊医患沟通参考 · 纯本地生成，保护个人隐私', width / 2, curY);
+        ctx.fillText('© 2025–2026 RECOVERY ATLAS · CSCO / NCCN 肺癌随访共识辅助', width / 2, curY + 24);
+        ctx.textAlign = 'left';
+
+        // 导出图片并挂载
+        var dataUrl = canvas.toDataURL('image/png');
+        currentShareCardDataUrl = dataUrl;
+
+        var img = new Image();
+        img.src = dataUrl;
+        img.alt = '就诊备忘长图卡片';
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        img.style.borderRadius = '6px';
+        img.style.boxShadow = '0 4px 16px rgba(0,0,0,.15)';
+
+        shareCanvasContainer.innerHTML = '';
+        shareCanvasContainer.appendChild(img);
+      } catch (err) {
+        shareCanvasContainer.innerHTML = '<div style="padding:30px; color:var(--verm)">绘制图片失败，建议直接使用手机截屏保存。</div>';
+      }
+    }, 120);
+  }
+
+  function downloadShareCard() {
+    if (!currentShareCardDataUrl) return;
+    var a = document.createElement('a');
+    a.href = currentShareCardDataUrl;
+    a.download = '肺癌术后就诊备忘卡_' + (currentPID || 'LC-2026') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function openShareCardModal() {
+    if (shareCardModalBackdrop) {
+      shareCardModalBackdrop.classList.add('show');
+      generateShareCard();
+    }
+  }
+
+  function closeShareCardModal() {
+    if (shareCardModalBackdrop) {
+      shareCardModalBackdrop.classList.remove('show');
+    }
+  }
+
+  if (genShareCardBtn) genShareCardBtn.addEventListener('click', openShareCardModal);
+  if (genShareCardFromNoteBtn) genShareCardFromNoteBtn.addEventListener('click', openShareCardModal);
+  if (closeShareCardModalBtn) closeShareCardModalBtn.addEventListener('click', closeShareCardModal);
+  if (dismissShareCardBtn) dismissShareCardBtn.addEventListener('click', closeShareCardModal);
+  if (downloadShareCardBtn) downloadShareCardBtn.addEventListener('click', downloadShareCard);
 
 })();
 </script>
